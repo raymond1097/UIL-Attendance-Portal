@@ -1,0 +1,102 @@
+<!Doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="images/Unilorin.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Unilorin-Public Administration</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+  
+    <main class="mx-auto flex flex-col justify-center items-center py-6 px-4 w-full max-w-lg">
+
+      <div id="alertBox" class="fixed top-5 left-5 w-80 hidden"></div>
+    
+      <!-- Logo -->
+      <header class="flex flex-col items-center">
+        <div class="h-[80px]">
+          <img src="images/unilorin.png" alt="Unilorin Logo" class="h-full">
+        </div>
+        <h1 class="text-3xl font-bold text-neutral-900 mt-6">Attendance Portal</h1>
+      </header>
+
+      <!-- Attendance Form -->
+      <section class="w-full mt-8">
+        <form id="topForm" class="flex flex-col gap-6">
+          
+          <!-- Name -->
+          <div class="flex flex-col">
+            <label for="studentNameInput" class="text-blue-900 font-bold text-lg mb-2">Name:</label>
+            <input 
+              id="studentNameInput" 
+              name="studentName"
+              type="text" 
+              placeholder="Enter Your Full Name"
+              class="w-full font-medium px-4 py-2  text-neutral-950 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <!-- Matric No -->
+          <div class="flex flex-col">
+            <label for="studentMatricInput" class="text-blue-900 font-bold text-lg mb-2">Matric No:</label>
+            <input 
+              id="studentMatricInput" 
+              name="matricNo"
+              type="text" 
+              placeholder="Enter Your Matric No"
+              class="w-full font-medium px-4 py-2 text-neutral-950 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <!-- Course Code -->
+          <div class="flex flex-col">
+            <label for="courseInput" class="text-blue-900 font-bold text-lg mb-2">Course Code:</label>
+            <input 
+              id="courseInput" 
+              name="courseCode"
+              type="text" 
+              placeholder="Enter Course Code (e.g. PAD 305)"
+              class="w-full font-medium px-4 py-2 text-neutral-950 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-4 mt-4">
+            <button 
+              id="submitAttendance"
+              type="submit"
+              class="flex-1 px-6 py-2 rounded-lg bg-blue-900 text-white font-semibold hover:bg-blue-700 transition cursor-pointer">
+              Submit Attendance
+            </button>
+            <button id="openLogin" class="fixed top-5 right-6 bg-blue-900 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg  cursor-pointer">
+  🔑         Login
+            </button>
+
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- Login Modal (Hidden by default) -->
+    <div id="loginModal" class="hidden fixed inset-0 flex items-center justify-center bg-black/90 text-neutral-800">
+      <div class="bg-white px-6 py-4 rounded-lg shadow-lg w-80">
+        <h2 class="text-xl font-bold mb-4 text-center">Teacher / Class Rep Login</h2>
+        <input id="loginName" type="text" placeholder="Username"
+          class="w-full border px-3 py-2 mb-3 rounded">
+        <input id="loginPassword" type="password" placeholder="Password"
+          class="w-full border px-3 py-2 mb-3 rounded">
+        <button id="loginSubmit"
+          class="w-full bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
+          Login
+        </button>
+        <p id="loginError" class="text-red-500 mt-2 hidden">❌ Invalid username or password</p>
+        <button id="closeLogin" class="mt-4 text-sm w-full px-4 py-2 rounded text-neutral-900 bg-gray-300 hover:bg-gray-400 transition cursor-pointer">Cancel</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
