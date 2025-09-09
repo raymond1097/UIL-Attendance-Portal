@@ -112,11 +112,13 @@ document.addEventListener("keydown", e => {
 //Close Modal
 closeLogin?.addEventListener("click", () => {
   loginModal.classList.add("hidden")
+  loginModal.classList.remove("flex")
   loginError.classList.add("hidden")
 })
 
 openLogin?.addEventListener("click", () => {
   loginModal.classList.remove("hidden");
+  loginModal.classList.add("flex")
   loginError.classList.add("hidden");
 });
 

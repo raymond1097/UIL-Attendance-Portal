@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("currentUser")
 
     // Redirect back to student form
-    window.location.href = "dashboard.html"
+    window.location.href = "index.html"
   })
 
   function populateFilter() {
