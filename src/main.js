@@ -13,6 +13,11 @@ const courseInput = document.getElementById('courseInput')
 
 let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || {};
 
+// School coordinates
+const schoolLat = 8.4799;   // Replace with your real latitude 6.5568768
+const schoolLng = 4.5418;  // Replace with your real longitude (check if negative/positive) 3.3488896
+const allowedRadius = 1000;   // 1000 meters = 1 km
+
 // Save submissions to localStorage
 function saveRecords() {
   localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
@@ -43,40 +48,83 @@ function showAlert(message, type = "info") {
   }, 3000)
 }
 
-// Add attendance
+// Haversine distance formula
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3 // Earth's radius in meters
+  const φ1 = lat1 * Math.PI/180
+  const φ2 = lat2 * Math.PI/180
+  const Δφ = (lat2-lat1) * Math.PI/180
+  const Δλ = (lon2-lon1) * Math.PI/180
+
+  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
+}
+
+// Add attendance with location check
+// Add attendance with location check
 function addInfo() {
   const name = studentNameInput.value.trim();
   const matric = studentMatricInput.value.trim();
-  const course = courseInput.value.trim()
-  const date = dayjs().format('DD-MM-YYYY')
+  const course = courseInput.value.trim();
+  const date = dayjs().format('DD-MM-YYYY');
 
   if (!name || !matric || !course) {
     showAlert("⚠️ Please fill in name, matric number and course.", "warning");
     return;
   }
 
-  if (!attendanceRecords[course]) {
-    attendanceRecords[course] =[]
+  // Check location before saving
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log("📍 Your position:", position.coords.latitude, position.coords.longitude);
+
+      const distance = getDistance(
+        position.coords.latitude,
+        position.coords.longitude,
+        schoolLat,
+        schoolLng
+      );
+
+      console.log("Distance from school:", distance, "meters");
+
+      if (distance > allowedRadius) {
+        showAlert("⚠️ You are not within UNILORIN premises.", "warning");
+        return; // ❌ stop here
+      }
+
+      // ✅ Proceed only if inside premises
+      if (!attendanceRecords[course]) {
+        attendanceRecords[course] = [];
+      }
+
+      const exists = attendanceRecords[course].some(
+        item => item.matric === matric && item.date === date
+      );
+      if (exists) {
+        showAlert("⚠️ Matric number already exists!", "warning");
+        return;
+      }
+
+      attendanceRecords[course].push({ name, matric, date, status: "Present" });
+      saveRecords();
+
+      // Reset form
+      studentNameInput.value = '';
+      studentMatricInput.value = '';
+      courseInput.value = '';
+      currentUser = { name: "Guest", role: "student" };
+
+      showAlert(`✅ Attendance recorded for ${course}`, "success");
+    }, () => {
+      showAlert("⚠️ Unable to fetch location. Please enable GPS.", "warning");
+    });
+  } else {
+    showAlert("⚠️ Geolocation not supported by your browser.", "warning");
   }
-
-  const exists = attendanceRecords[course].some(item => item.matric === matric && item.date === date);
-  if (exists) {
-    showAlert("⚠️ Matric number already exists!", "warning");
-    return;
-  }
-
-  attendanceRecords[course].push({ name, matric, date, status: "Present" });
-  saveRecords();
-
-  // Reset form
-  studentNameInput.value = '';
-  studentMatricInput.value = '';
-  courseInput.value = ''
-
-  // Reset back to student until name is retyped
-  currentUser = { name: "Guest", role: "student" };
-
-  showAlert(`✅ Attendance recorded for ${course}`, "success")
 }
 
 // Event listeners
@@ -111,7 +159,7 @@ document.addEventListener("keydown", e => {
 
 //Close Modal
 closeLogin?.addEventListener("click", () => {
-  loginModal.classList.add("hidden")
+  // loginModal.classList.add("hidden")
   loginModal.classList.remove("flex")
   loginError.classList.add("hidden")
 })
