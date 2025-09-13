@@ -14,8 +14,8 @@ const courseInput = document.getElementById('courseInput')
 let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || {};
 
 // School coordinates
-const schoolLat = 6.5568768;   // Replace with your real latitude unilorinLat 8.4799
-const schoolLng = 3.3488896;  // Replace with your real longitude (check if negative/positive) unilorinLng 4.5418
+const schoolLat = 40.7859464;   // Replace with your real latitude unilorinLat 8.4799
+const schoolLng = -73.9741874;  // Replace with your real longitude (check if negative/positive) unilorinLng 4.5418
 const allowedRadius = 1000;   // 1000 meters = 1 km
 
 // Save submissions to localStorage

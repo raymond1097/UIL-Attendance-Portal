@@ -252,15 +252,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Title for each course
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text(`${course} Student Attendance List - ${timestamp}`, 14, y);
+        doc.text(`${course} Student Attendance List - ${selectedDate}`, 14, y);
 
         // Add table
         doc.autoTable({
           startY: y + 5,
           head: [["Name", "Matric No", "Date", "Status"]],
-          body: attendanceRecords[course].map(rec => [
-            rec.name, rec.matric, rec.date, rec.status
-          ]),
+          body: attendanceRecords[course]
+          .filter(rec => rec.date === selectedDate) // ✅ only include chosen date
+          .map(rec => [rec.name, rec.matric, rec.date, rec.status]),
           headStyles: {
           fillColor: [30, 64, 175], 
           textColor: [255, 255, 255], 
@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // File name with timestamp (safe for filenames)
-      const fileName = `attendance_${dayjs().format("YYYY-MM-DD_HH-mm")}.pdf`;
+      const fileName = `attendance_${dayjs().format("HH-mm")}.pdf`;
       doc.save(fileName);
     });
   }
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (Object.keys(summaryData).length === 0 || Object.values(summaryData).every(s => Object.values(s).every(s => s === 0))) {
-      summaryContent.innerHTML = `<p class="text-gray-500">No attendance recors for ${targetDate}</p>`
+      summaryContent.innerHTML = `<p class="text-gray-500">No attendance records for ${targetDate}</p>`
       return
     }
 
@@ -391,8 +391,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const summaryDateInput = document.getElementById("summaryDate")
 
   if (summaryDateInput) {
-    summaryDateInput.innerHTML = dayjs().format("DD-MM-YYYY")
+    summaryDateInput.value = dayjs().format("DD-MM-YYYY")
 
+    //render summary for today
+    renderSummary(dayjs().format("DD-MM-YYYY"))
+
+    //handle changes when user picks another date
     summaryDateInput.addEventListener("change", e => {
       const selected = dayjs(e.target.value).format("DD-MM-YYYY")
       renderSummary(selected)
